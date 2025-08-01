@@ -30,7 +30,14 @@ lazy_static::lazy_static! {
         Arc::new(RwLock::new(sui_kp))
     };
     pub static ref SEAL_CONFIG: SealConfig = {
+        // Debug: print current working directory
+        if let Ok(cwd) = std::env::current_dir() {
+            println!("Current working directory in enclave: {:?}", cwd);
+        }
+        
         let config_path = "src/examples/seal_example/seal_config.yaml";
+        println!("Attempting to read config from: {}", config_path);
+        
         let config_str = std::fs::read_to_string(config_path)
             .expect("Failed to read seal_config.yaml");
         serde_yaml::from_str(&config_str)
